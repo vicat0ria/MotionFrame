@@ -23,7 +23,7 @@ MotionFrame aims to:
 - **Data Filtering & Refinement**: Implements Kalman filters and frame interpolation for smoother animations.
 - **Animation Export**: Supports formats like **BVH, FBX, JSON** for use in **Blender, Unity, and other 3D applications**.
 
-### Tech Stack:
+### Tech Stack (subject to change): 
 | Component | Technology |
 |-----------|------------|
 | Frontend | HTML, CSS, JavaScript/TypeScript (**React.js + Three.js/WebGL**) |
@@ -35,9 +35,9 @@ MotionFrame aims to:
 
 ## References
 ### Motion Capture Research & Techniques
-- **"DeepLabCut: Markerless Pose Estimation of User-Defined Body Parts with Deep Learning" (Current Biology)** – Discusses deep learning-based pose estimation for motion capture without markers.
-- **"Motion Capture: Overview and Technical Challenges" (Stanford AI)** – Provides an overview of motion capture technology, including challenges and future directions.
-- **Carnegie Mellon University Motion Capture Database (CMU MoCap)** – A comprehensive dataset of human motion capture recordings, useful for research and animation.
+- **[DeepLabCut: Markerless Pose Estimation of User-Defined Body Parts with Deep Learning](https://www.cell.com/current-biology/fulltext/S0960-9822(18)30309-9?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0960982218303099%3Fshowall%3Dtrue)** – Discusses deep learning-based pose estimation for motion capture without markers.
+- **[Motion Capture: Overview and Technical Challenges](https://ai.stanford.edu/~latombe/cs99k/2000/capture.pdf)** – Provides an overview of motion capture technology, including challenges and future directions.
+- **[Carnegie Mellon University Motion Capture Database](http://mocap.cs.cmu.edu/)** – A comprehensive dataset of human motion capture recordings, useful for research and animation.
 
 ### Open-source Motion Capture Platforms
 - **[FreeMoCap Project](https://freemocap.org/)** – An open-source initiative for markerless motion capture using consumer-grade cameras.
@@ -54,20 +54,5 @@ MotionFrame aims to:
    cd motionframe
    ```
 2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Start the backend:
-   ```sh
-   npm run server
-   ```
-4. Start the frontend:
-   ```sh
-   npm run client
-   ```
-
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request.
-
-## License
-This project is licensed under the MIT License. See `LICENSE` for details.
+   
+   UPDATE AS NEEDED
