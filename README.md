@@ -47,12 +47,31 @@ MotionFrame aims to:
 - **[Rokoko Studio](https://www.rokoko.com/)** – A professional motion capture tool with an intuitive UI for animation and real-time tracking.
 - **[Clipchamp](https://www.clipchamp.com/)** – A simple, user-friendly video editing platform that serves as a UI reference.
 
+## Prerequisites
+
+Ensure you have the following installed:  
+- [Node.js](https://nodejs.org/) (Recommended: LTS version)  
+
 ## Installation & Setup
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/motionframe.git
-   cd motionframe
+   git clone https://github.com/<your-github-user>/MotionFrame.git
+   cd MotionFrame
    ```
 2. Install dependencies:
-   
-   UPDATE AS NEEDED
+   ```
+   cd react-app
+   npm install
+   ```
+2. Run the Development Server:
+   ```
+   npm run dev
+   ```
+   After running the command, you should see output similar to this:
+   ```
+   VITE vX.X.X ready in Xms
+   ➜  Local:   http://localhost:5173/
+   ➜  Network: http://192.168.X.X:5173/
+   ```
+   Open http://localhost:5173/ in your browser to view the app.
+
