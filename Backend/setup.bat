@@ -1,5 +1,5 @@
 @echo off
-echo Checking for Node.js installation...
+echo Setting up MotionFrame Backend (Windows)...
 
 REM Check if Node.js is installed
 node -v >nul 2>&1
@@ -8,18 +8,15 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo Node.js is installed. Proceeding with setup...
-
-REM Navigate to backend directory (ensure it's run from the right place)
+REM Navigate to backend directory
 cd /d "%~dp0"
 
-REM Ensure a clean install (Optional: Uncomment to force reinstallation)
-REM echo Removing existing dependencies...
-REM rmdir /s /q node_modules
-REM del package-lock.json
+echo Removing old dependencies (if needed)...
+rmdir /s /q node_modules
+del package-lock.json
 
 echo Installing dependencies...
-npm install
+npm install --include=dev
 
 echo Compiling TypeScript...
 npx tsc
