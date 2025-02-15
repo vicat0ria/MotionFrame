@@ -1,27 +1,22 @@
 # instructions to run batch file script
 
-# windows users
-open command prompt, powershell, or VSCode terminal
+# Open command prompt, powershell, VSCode terminal, gitbash, etc
+# Navigate to project root directory /cd path/to/MotionFrame
 
-navigate to Backend directory (folder) of project
+run "node setup.js" command
 
-run setup.bat
+# run as admin if permission issue occurs
 
-# if permission issues occur run as Administrator
+# Mac/linux permission issue
 
-then start backend using; npm run dev
+ chmod +x setup.js
+ node setup.js
+# ----------------------------------------- #
 
-# mac users
+# Go to Backend directory after setup.js is complete. /cd path/to/MotionFrame/Backend 
 
-open terminal
+ run "npm run dev" to start server
 
-navigate to Backend directory (folder) of project
 
-run setup.sh
 
-# if permission issues occur run following
 
-chmod +x setup.sh
-./setup.sh
-
-then start backend using; npm run dev
