@@ -7,18 +7,46 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Ignore node_modules (dependencies should be installed per environment)
+node_modules/
+
+# Ignore build output (but keep source files)
+dist/
+dist-ssr/
 *.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Ignore system files
 .DS_Store
+Thumbs.db
+
+# Ignore TypeScript build artifacts
+*.tsbuildinfo
+
+# Ignore .env files (but allow sharing an .env.example)
+.env
+!.env.example
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore React build files
+react-app/build/
+react-app/public/assets/
+
+# Ensure we track essential backend and frontend files
+!Backend/Src/
+!Backend/Src/configs/
+!Backend/Src/models/
+!Backend/Src/routes/
+!Backend/Src/server.ts
+
+!react-app/src/
+!react-app/src/pages/
+!react-app/public/
+!react-app/vite-env.d.ts
