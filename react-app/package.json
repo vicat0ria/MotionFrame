@@ -13,9 +13,11 @@
   "dependencies": {
     "@react-three/drei": "^9.121.5",
     "@react-three/fiber": "^8.17.14",
+    "bootstrap": "^5.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-refresh": "^0.14.0",
+    "react-router-dom": "^7.1.5",
     "three": "^0.173.0",
     "three-mesh-bvh": "^0.8.0",
     "three-stdlib": "^2.35.13"
