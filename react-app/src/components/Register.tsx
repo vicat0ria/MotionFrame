@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./Login.module.css";
+import styles from "./Register.module.css";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -22,20 +22,31 @@ const Login: React.FC = () => {
 
         {/* Right Side - Form */}
         <div className={styles.formSection}>
-          <h1 className={styles.heading}>Log in</h1>
+          <h1 className={styles.heading}>Create an account</h1>
           <p className={styles.subtext}>
-            Don't have an account? <a href="/MotionFrame/register" className={styles.link}>Sign Up</a>
+            Already have an account? <a href="/MotionFrame/login" className={styles.link}>Log in</a>
           </p>
 
           <form className={styles.form}>
-
+            <div className={styles.inputGroup}>
+              <input type="text" placeholder="First name" className={styles.input} />
+              <input type="text" placeholder="Last name" className={styles.input} />
+            </div>
             <input type="email" placeholder="Email" className={styles.input} />
             <input type="password" placeholder="Enter your password" className={styles.input} />
-            <br></br>
-            <button type="submit" className={styles.createButton}>Log In</button>
+            <input type="password" placeholder="Re-enter your password" className={styles.input} />
+
+            <div className={styles.checkboxGroup}>
+              <input type="checkbox" id="terms" />
+              <label htmlFor="terms">
+                I agree to the <a href="#" className={styles.link}>Terms & Conditions</a>
+              </label>
+            </div>
+
+            <button type="submit" className={styles.createButton}>Create account</button>
           </form>
 
-          <div className={styles.divider}>Or log in with</div>
+          <div className={styles.divider}>Or register with</div>
 
           <div className={styles.socialButtons}>
             <button className={styles.googleButton}>Google</button>
@@ -49,4 +60,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

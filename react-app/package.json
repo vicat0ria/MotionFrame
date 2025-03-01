@@ -11,9 +11,11 @@
     "postinstall": "npm run lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@react-three/drei": "^9.121.5",
     "@react-three/fiber": "^8.17.14",
     "bootstrap": "^5.3.3",
+    "font-awesome": "^4.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-refresh": "^0.14.0",
