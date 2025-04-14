@@ -1,9 +1,9 @@
 # MotionFrame: Motion Capture Processing for Animation
 
-## Group Members
-- Bryan Abrego
-- Daniel Betancourt
-- Victoria Miteva
+## Group Members (Group 8)
+- Bryan Abrego - Backend (Database)
+- Daniel Betancourt - Machine Learning
+- Victoria Miteva - Frontend
 
 ## Introduction
 MotionFrame is a web-based system designed to extract and refine human motion data from videos, making it ready for animation and 3D applications. Using **MediaPipe Pose**, the platform efficiently detects skeletal movements in real-time, ensuring smooth and accurate motion capture without requiring high-end hardware or GPUs.
@@ -26,12 +26,12 @@ MotionFrame aims to:
 ### Tech Stack (subject to change): 
 | Component | Technology |
 |-----------|------------|
-| Frontend | HTML, CSS, JavaScript/TypeScript (**React.js + Three.js/WebGL**) |
-| Backend | Node.js + Express.js, passport.js, socket.io |
+| Frontend | React.js, TypeScript, HTML, CSS |
+| Backend | Node.js + Express.js |
 | Database & Storage | MongoDB Atlas (GridFS) |
-| Machine Learning | PyTorch/TensorFlow, MediaPipe Pose |
-| Video Processing | FFmpeg |
-| Deployment | Docker, Render, Railway, Google Cloud Platform, AWS |
+| Machine Learning | MediaPipe Pose, Python (Converted to JS), Google Colab |
+| Video Processing | TBD |
+| Deployment | TBD |
 
 ## References
 ### Motion Capture Research & Techniques
