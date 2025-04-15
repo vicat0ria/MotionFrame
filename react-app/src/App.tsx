@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import routes from "./components/routes";
+import VideoEditor from "./pages/VideoEditor";
 
 function App() {
   return (
@@ -13,6 +14,10 @@ function App() {
         <Route
           path={routes.dashboard}
           element={<h1>Welcome to the Dashboard</h1>}
+        />
+        <Route
+          path={routes.videoEditor}
+          element={<VideoEditor />}
         />
       </Routes>
     </Router>

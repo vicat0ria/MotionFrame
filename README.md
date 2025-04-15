@@ -51,27 +51,98 @@ MotionFrame aims to:
 
 Ensure you have the following installed:  
 - [Node.js](https://nodejs.org/) (Recommended: LTS version)  
+- [Python](https://www.python.org/downloads/) (Version 3.8 or higher)
+- [MongoDB](https://www.mongodb.com/try/download/community) (or use MongoDB Atlas for cloud-based database)
+- [Git](https://git-scm.com/downloads)
 
 ## Installation & Setup
+
+### Frontend Setup
 1. Clone the repository:
    ```sh
    git clone https://github.com/<your-github-user>/MotionFrame.git
    cd MotionFrame
    ```
-2. Install dependencies:
-   ```
+
+2. Install frontend dependencies:
+   ```sh
    cd react-app
    npm install
    ```
-2. Run the Development Server:
-   ```
+
+3. Start the frontend development server:
+   ```sh
    npm run dev
    ```
-   After running the command, you should see output similar to this:
+   The frontend will be available at http://localhost:5173/MotionFrame/
+
+### Backend Setup
+1. Navigate to the backend directory:
+   ```sh
+   cd ../Backend
    ```
-   VITE vX.X.X ready in Xms
-   ➜  Local:   http://localhost:5173/
-   ➜  Network: http://192.168.X.X:5173/
+
+2. Install backend dependencies:
+   ```sh
+   npm install
    ```
-   Open http://localhost:5173/ in your browser to view the app.
+
+3. Create a `.env` file in the Backend directory with the following variables:
+   ```
+   MONGODB_URI=your_mongodb_connection_string
+   PORT=3000
+   ```
+
+4. Start the backend server:
+   ```sh
+   npm start
+   ```
+   The backend API will be available at http://localhost:3000
+
+### Machine Learning Setup
+1. Navigate to the MachineLearning directory:
+   ```sh
+   cd ../MachineLearning
+   ```
+
+2. Create a Python virtual environment:
+   ```sh
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - Windows:
+     ```sh
+     .\venv\Scripts\activate
+     ```
+   - macOS/Linux:
+     ```sh
+     source venv/bin/activate
+     ```
+
+4. Install Python dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+## Development Workflow
+1. Start the backend server first (in the Backend directory)
+2. Start the frontend development server (in the react-app directory)
+3. The Machine Learning components will be called as needed by the backend
+
+## Troubleshooting
+- If you encounter port conflicts, modify the PORT variable in the backend `.env` file
+- Ensure MongoDB is running and accessible
+- For Python-related issues, ensure your virtual environment is activated
+- If you see linting errors during frontend setup, they won't prevent the application from running but should be addressed for code quality
+
+## Project Structure
+```
+MotionFrame/
+├── react-app/          # Frontend React application
+├── Backend/            # Node.js backend server
+├── MachineLearning/    # Python ML components
+├── Storage/            # File storage directory
+└── Test/              # Test files and utilities
+```
 
