@@ -8,6 +8,7 @@ interface SettingsPanelProps {
   onPlaybackSpeedChange: (value: number) => void;
   smoothness: number;
   onSmoothnessChange: (value: number) => void;
+  sliderClassName?: string;
 }
 
 const speedPresets = [0.25, 0.5, 1.0, 1.5, 2.0];
@@ -18,6 +19,7 @@ export function SettingsPanel({
   onPlaybackSpeedChange,
   smoothness,
   onSmoothnessChange,
+  sliderClassName,
 }: SettingsPanelProps) {
   return (
     <div className="p-6 border-t border-[#3a3a3a] text-white" style={{ backgroundColor: '#1e1a2b' }}>
@@ -55,7 +57,7 @@ export function SettingsPanel({
             max={2.0}
             step={0.25}
             onValueChange={([value]) => onPlaybackSpeedChange(value)}
-            className="mb-6"
+            className={`mb-6 ${sliderClassName}`}
           />
           
           <div className="grid grid-cols-5 gap-2">
@@ -110,7 +112,7 @@ export function SettingsPanel({
             max={1.0}
             step={0.25}
             onValueChange={([value]) => onSmoothnessChange(value)}
-            className="mb-6"
+            className={`mb-6 ${sliderClassName}`}
           />
           
           <div className="grid grid-cols-5 gap-2">

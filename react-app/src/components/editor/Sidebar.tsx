@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
+import skeletonPlaceholder from '@/assets/Skeleton-Extract-Placeholder.png';
+import previewPlaceholder from '@/assets/Preview-Placeholder.png';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -19,17 +21,29 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           Import Media
         </Button>
 
-        <h2 className="text-lg font-semibold mb-4 text-purple-400">Media</h2>
+        <h2 className="text-lg font-semibold mb-4 text-white">Media</h2>
         
         <div className="space-y-4">
-          {/* Mock Media Items */}
+          {/* Media Items with Thumbnails */}
           <div className="bg-[#3a3a3a] rounded-lg p-2">
-            <div className="aspect-video bg-[#4a4a4a] rounded mb-2" />
+            <div className="aspect-video bg-[#3a3a3a] rounded mb-2 overflow-hidden">
+              <img 
+                src={skeletonPlaceholder} 
+                alt="Skeleton Extract" 
+                className="w-full h-full object-cover"
+              />
+            </div>
             <p className="text-sm truncate">Sample Video 1.mp4</p>
           </div>
           
           <div className="bg-[#3a3a3a] rounded-lg p-2">
-            <div className="aspect-video bg-[#4a4a4a] rounded mb-2" />
+            <div className="aspect-video bg-[#3a3a3a] rounded mb-2 overflow-hidden">
+              <img 
+                src={previewPlaceholder} 
+                alt="Preview" 
+                className="w-full h-full object-cover"
+              />
+            </div>
             <p className="text-sm truncate">Sample Video 2.mp4</p>
           </div>
         </div>

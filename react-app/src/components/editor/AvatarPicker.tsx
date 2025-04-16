@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import avatar1 from '@/assets/avatar1.png';
+import avatar2 from '@/assets/avatar2.png';
+import avatar3 from '@/assets/avatar3.png';
 
 interface AvatarPickerProps {
   selected: number;
@@ -9,9 +12,9 @@ interface AvatarPickerProps {
 
 export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
   const avatars = [
-    { name: "Avatar 1", color: "bg-blue-500" },
-    { name: "Avatar 2", color: "bg-purple-500" },
-    { name: "Avatar 3", color: "bg-green-500" },
+    { name: "Avatar 1", image: avatar1 },
+    { name: "Avatar 2", image: avatar2 },
+    { name: "Avatar 3", image: avatar3 },
   ];
 
   return (
@@ -20,9 +23,13 @@ export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
         <Button
           variant="outline"
           size="icon"
-          className="w-12 h-12 rounded-full border-white/20 hover:bg-white/10 relative overflow-hidden"
+          className="w-12 h-12 rounded-full border-white/20 hover:bg-white/10 relative overflow-hidden p-0"
         >
-          <div className={cn("absolute inset-1 rounded-full", avatars[selected].color)} />
+          <img 
+            src={avatars[selected].image} 
+            alt={avatars[selected].name}
+            className="w-full h-full object-cover rounded-full"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2" align="end">
@@ -37,7 +44,13 @@ export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
               )}
               onClick={() => onSelect(index)}
             >
-              <div className={cn("w-6 h-6 rounded-full", avatar.color)} />
+              <div className="w-6 h-6 rounded-full overflow-hidden">
+                <img 
+                  src={avatar.image} 
+                  alt={avatar.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <span className="text-sm">{avatar.name}</span>
             </Button>
           ))}
