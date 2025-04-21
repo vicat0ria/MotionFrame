@@ -52,8 +52,8 @@ def extract_pose(input_video_path, output_json_path):
     with open(output_json_path, "w") as f:
         json.dump(landmarks_data, f, indent=4)
 
-    print(f"✅ Pose extraction complete. {frame_count} frames processed.")
-    print(f"📝 JSON saved to: {output_json_path}")
+    print(f" Pose extraction complete. {frame_count} frames processed.")
+    print(f" JSON saved to: {output_json_path}")
 
 # Command-line usage
 if __name__ == "__main__":
