@@ -4,6 +4,7 @@ const routes = {
     signup: "/signup",
     dashboard: "/dashboard",
     videoEditor: "/video-editor",
+    homePage: "/home",
   };
   
   export default routes;
