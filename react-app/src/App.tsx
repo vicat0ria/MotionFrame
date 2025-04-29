@@ -4,6 +4,7 @@ import SignUp from "./components/SignUp";
 import routes from "./components/routes";
 import VideoEditor from "./pages/VideoEditor";
 import Home from "./pages/Home";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -20,6 +21,10 @@ function App() {
         <Route
           path={routes.videoEditor}
           element={<VideoEditor />}
+        />
+        <Route
+          path={routes.settings}
+          element={<Settings />}
         />
       </Routes>
     </Router>

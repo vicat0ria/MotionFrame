@@ -5,6 +5,7 @@ const routes = {
     dashboard: "/dashboard",
     videoEditor: "/video-editor",
     homePage: "/home",
+    settings: "/settings",
   };
   
   export default routes;

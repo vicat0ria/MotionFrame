@@ -5,6 +5,7 @@ import logo from "@/assets/MF-logo.png";
 import templateHome from "@/assets/template_home.png";
 import './Home.css';
 import { useRef } from "react";
+import routes from "@/components/routes";
 
 // Mock data
 const projects = [
@@ -140,9 +141,11 @@ export default function Home() {
           <Button variant="outline" size="icon" className="rounded-full border-white/20 text-white shadow-lg hover:bg-white/10" style={{ backgroundColor: '#0a0a0a', width: 50, height: 50 }}>
             <Bell style={{ width: 29, height: 29 }} />
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full border-white/20 text-white shadow-lg hover:bg-white/10" style={{ backgroundColor: '#0a0a0a', width: 50, height: 50 }}>
-            <User style={{ width: 34, height: 34 }} />
-          </Button>
+          <Link to={routes.settings}>
+            <Button variant="outline" size="icon" className="rounded-full border-white/20 text-white shadow-lg hover:bg-white/10" style={{ backgroundColor: '#0a0a0a', width: 50, height: 50 }}>
+              <User style={{ width: 34, height: 34 }} />
+            </Button>
+          </Link>
         </div>
         <h1 className="text-4xl font-bold text-white mb-8">Home</h1>
         {/* My Projects */}
