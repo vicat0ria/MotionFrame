@@ -1,133 +1,193 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router } from "express";
 import passport from "passport";
-import User, { IUser } from "../models/User.js"; // Adjust the path as needed
+import { AuthenticateOptions } from "passport-facebook";
+import { authLimiter } from "../middleware/ratelimit.middleware.js";
+import { validateRequest } from "../utils/validation.js";
+import { body } from "express-validator";
+import {
+  register,
+  login,
+  logout,
+  changePassword,
+  getCurrentUser,
+} from "../controllers/auth.controller.js";
 
 const router = Router();
 
-// ---------------- registration route ----------------
-router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
-  try {
-    // Validate required fields
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required." });
-    }
+// Remove global rate limiting
+// router.use(authLimiter);
 
-    // Check if a user with the given email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email is already registered." });
-    }
+// Registration validation
+const registerValidation = [
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage(
+      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    ),
+  body("username")
+    .optional()
+    .isLength({ min: 3, max: 20 })
+    .withMessage("Username must be between 3 and 20 characters")
+    .matches(/^[a-zA-Z0-9_-]+$/)
+    .withMessage(
+      "Username can only contain letters, numbers, underscores and hyphens"
+    ),
+];
 
-    // Create a new user (password will be hashed automatically)
-    const newUser = new User({ username, email, password });
-    await newUser.save();
+// Login validation
+const loginValidation = [
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("password").notEmpty().withMessage("Password is required"),
+];
 
-    res.status(201).json({ message: "User registered successfully." });
-  } catch (err) {
-    console.error("Registration error:", err);
-    res.status(500).json({ message: "Server error during registration." });
-  }
-});
+// Apply rate limiting only to local auth routes
+router.post(
+  "/register",
+  authLimiter,
+  registerValidation,
+  validateRequest,
+  register
+);
+router.post("/login", authLimiter, loginValidation, validateRequest, login);
 
-// ---------------- local login ----------------
-router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate(
-    "local",
-    (err: Error | null, user: IUser | false, info?: { message?: string }) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.status(400).json({
-          message: info?.message || "Login failed.",
-        });
-      }
-      req.logIn(user, (err: Error | null) => {
-        if (err) {
-          return next(err);
-        }
-        return res.status(200).json({
-          message: "Login successful.",
-          user: {
-            id: user._id,
-            email: user.email,
-            username: user.username,
-          },
-        });
-      });
-    }
-  )(req, res, next);
-});
+// Password management
+router.post(
+  "/change-password",
+  [
+    body("currentPassword")
+      .notEmpty()
+      .withMessage("Current password is required"),
+    body("newPassword")
+      .isLength({ min: 8 })
+      .withMessage("Password must be at least 8 characters")
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      .withMessage(
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
+  ],
+  validateRequest,
+  changePassword
+);
 
-// ---------------- Google OAuth ----------------
+// Google OAuth
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account", // Always show account selector
+  })
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: `${
+      process.env.FRONTEND_URL || "http://localhost:5173"
+    }/MotionFrame/#/login`,
+    failureMessage: true,
+  }),
   (req, res) => {
-    res.redirect("/dashboard"); // Redirect after successful login
+    const isNewUser = req.user?.isNew;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(
+      `${frontendUrl}/MotionFrame/#${
+        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
+      }`
+    );
   }
 );
 
-// ---------------- GitHub OAuth ----------------
+// GitHub OAuth
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user:email"] })
+  passport.authenticate("github", {
+    scope: ["user:email"],
+    prompt: "consent", // Always show consent screen
+  })
 );
 
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate("github", {
+    failureRedirect: `${
+      process.env.FRONTEND_URL || "http://localhost:5173"
+    }/MotionFrame/#/login`,
+    failureMessage: true,
+  }),
   (req, res) => {
-    res.redirect("/dashboard");
+    const isNewUser = req.user?.isNew;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(
+      `${frontendUrl}/MotionFrame/#${
+        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
+      }`
+    );
   }
 );
 
-// ---------------- Facebook OAuth ----------------
+// Facebook OAuth
 router.get(
   "/facebook",
-  passport.authenticate("facebook", { scope: ["email"] })
+  passport.authenticate("facebook", {
+    scope: ["email"],
+    display: "popup",
+  } as AuthenticateOptions)
 );
+
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  passport.authenticate("facebook", {
+    failureRedirect: `${
+      process.env.FRONTEND_URL || "http://localhost:5173"
+    }/MotionFrame/#/login`,
+    failureMessage: true,
+  }),
   (req, res) => {
-    res.redirect("/dashboard");
+    const isNewUser = req.user?.isNew;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(
+      `${frontendUrl}/MotionFrame/#${
+        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
+      }`
+    );
   }
 );
 
-// ---------------- LinkedIn OAuth ----------------
-
-// LinkedIn Login Route
+// LinkedIn OAuth
 router.get(
   "/linkedin",
-  passport.authenticate("linkedin", { scope: ["profile", "email"] })
-);
-
-// LinkedIn Callback Route
-router.get(
-  "/linkedin/callback",
   passport.authenticate("linkedin", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
+    scope: ["r_emailaddress", "r_liteprofile"],
+    prompt: "select_account", // Always show account selector
   })
 );
 
-// Logout Route
-router.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ message: "Logout failed" });
-    }
-    res.redirect("/");
-  });
-});
+router.get(
+  "/linkedin/callback",
+  passport.authenticate("linkedin", {
+    failureRedirect: `${
+      process.env.FRONTEND_URL || "http://localhost:5173"
+    }/MotionFrame/#/login`,
+    failureMessage: true,
+  }),
+  (req, res) => {
+    const isNewUser = req.user?.isNew;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(
+      `${frontendUrl}/MotionFrame/#${
+        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
+      }`
+    );
+  }
+);
 
-export { router };
+// Current user
+router.get("/current-user", getCurrentUser);
+
+// Logout
+router.post("/logout", logout);
+
+export default router;

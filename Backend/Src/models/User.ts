@@ -1,55 +1,83 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose, { Document, Types } from "mongoose";
+import bcrypt from "bcrypt";
+import { normalizeEmail } from "../utils/validation.js";
 
 export interface IUser extends Document {
-  username?: string;
+  _id: Types.ObjectId;
   email: string;
+  normalizedEmail: string;
   password?: string;
-  googleId?: string;
-  githubId?: string;
+  username?: string;
   facebookId?: string;
+  githubId?: string;
   linkedinId?: string;
-  role: string;
-  tokens: string[];
-  createdAt?: Date;
-  comparePassword(plainPassword: string): Promise<boolean>;
+  googleId?: string;
+  oauthProviders: string[];
+  profile?: {
+    name?: string;
+    picture?: string;
+    provider?: string;
+  };
+  role: "user" | "admin";
+  isEmailVerified: boolean;
+  validatePassword(password: string): Promise<boolean>;
 }
-// Define User Schema
-const UserSchema = new Schema<IUser>(
-  {
-    username: { type: String, required: false, unique: true, sparse: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: false }, // Optional for OAuth users
-    googleId: { type: String },
-    githubId: { type: String },
-    facebookId: { type: String },
-    linkedinId: { type: String },
-    tokens: [{ type: String }],
+
+const userSchema = new mongoose.Schema<IUser>({
+  email: { type: String, required: true, unique: true },
+  normalizedEmail: { type: String, required: true, unique: true },
+  password: { type: String },
+  username: { type: String },
+  facebookId: { type: String },
+  githubId: { type: String },
+  linkedinId: { type: String },
+  googleId: { type: String },
+  oauthProviders: { type: [String], default: [] },
+  profile: {
+    name: { type: String },
+    picture: { type: String },
+    provider: { type: String },
   },
-  { timestamps: true }
-);
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  isEmailVerified: { type: Boolean, default: false },
+});
 
 // Ensure Indexes Are Created (Remove Duplicates)
-UserSchema.index({ linkedinId: 1 }, { unique: true, sparse: true });
-UserSchema.index({ googleId: 1 }, { unique: true, sparse: true });
-UserSchema.index({ githubId: 1 }, { unique: true, sparse: true });
-UserSchema.index({ facebookId: 1 }, { unique: true, sparse: true });
+userSchema.index({ linkedinId: 1 }, { unique: true, sparse: true });
+userSchema.index({ googleId: 1 }, { unique: true, sparse: true });
+userSchema.index({ githubId: 1 }, { unique: true, sparse: true });
+userSchema.index({ facebookId: 1 }, { unique: true, sparse: true });
+userSchema.index({ normalizedEmail: 1 }, { unique: true });
 
-// Hash password before saving a user
-UserSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  if (this.password) {
-    this.password = await bcrypt.hash(this.password, 10);
+// Generate normalizedEmail before saving
+userSchema.pre("save", function (next) {
+  if (this.isModified("email")) {
+    this.normalizedEmail = normalizeEmail(this.email);
   }
   next();
 });
 
-// Compare entered password with stored hash
-UserSchema.methods.comparePassword = async function (plainPassword: string) {
-  return bcrypt.compare(plainPassword, this.password as string);
+// Hash password before saving
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password") || !this.password) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password as string, salt);
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
+});
+
+// Password comparison method
+userSchema.methods.validatePassword = async function (
+  password: string
+): Promise<boolean> {
+  if (!this.password) return false;
+  return bcrypt.compare(password, this.password);
 };
 
-// Create User Model
-const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;
