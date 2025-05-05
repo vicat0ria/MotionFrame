@@ -82,6 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch (error) {
         console.error("Auth initialization error:", error);
       } finally {
+        // TEMP: Use fake user if present in localStorage
+        const fakeUser = localStorage.getItem("fakeUser");
+        if (fakeUser) {
+          setUser(JSON.parse(fakeUser));
+          setIsLoading(false);
+          return;
+        }
         setIsLoading(false);
       }
     };
