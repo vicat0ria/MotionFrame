@@ -1,60 +1,43 @@
 import passport from "passport";
-import {
-  Strategy as LinkedInStrategy,
-  Profile,
-} from "passport-linkedin-oauth2";
-import dotenv from "dotenv";
+import { Strategy as LinkedInStrategy } from "passport-linkedin-oauth2";
 import User from "../models/User.js";
-
-dotenv.config();
-
-// Define Verify Callback Type
-type VerifyCallback = (error: any, user?: Express.User | false | null) => void;
+import { findOrCreateOAuthUser } from "../services/authService.js";
 
 passport.use(
   new LinkedInStrategy(
     {
-      clientID: process.env.LINKEDIN_CLIENT_ID as string,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET as string,
-      callbackURL: process.env.LINKEDIN_CALLBACK_URL as string,
-      scope: ["profile", "email"],
+      clientID: process.env.LINKEDIN_CLIENT_ID || "",
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "",
+      callbackURL:
+        process.env.LINKEDIN_CALLBACK_URL || "/api/auth/linkedin/callback",
+      scope: ["r_emailaddress", "r_liteprofile"],
     },
-    async (
-      accessToken: string,
-      refreshToken: string,
-      profile: Profile,
-      done: VerifyCallback
-    ) => {
+    async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ linkedinId: profile.id });
-        if (!user) {
-          user = new User({
-            linkedinId: profile.id,
-            username: profile.displayName,
-            email: profile.emails?.[0]?.value || `${profile.id}@linkedin.com`,
-          });
-          await user.save();
+        if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+          return done(new Error("Email not provided by LinkedIn"));
         }
+
+        const email = profile.emails[0].value;
+        const profileData = {
+          name: profile.displayName,
+          picture:
+            profile.photos && profile.photos[0] ? profile.photos[0].value : "",
+        };
+
+        const user = await findOrCreateOAuthUser(
+          email,
+          profile.id,
+          "linkedin",
+          profileData
+        );
+
         return done(null, user);
-      } catch (error) {
-        return done(error, undefined);
+      } catch (err) {
+        return done(err as Error);
       }
     }
   )
 );
-
-// Serialize & Deserialize User
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id: string, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err as Error, null);
-  }
-});
 
 export default passport;

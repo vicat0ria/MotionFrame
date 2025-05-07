@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project: MotionFrame
+
+## High-Level Description:
+MotionFrame is a video-based motion capture processing platform for human movement.  
+Users upload videos; backend processes the videos to extract skeletal landmarks, generate thumbnails, compress videos, and offer export options in .json, .csv, .bvh, and .mp4 formats.
+
+## Backend Stack:
+- Node.js with TypeScript
+- Express.js for API routes
+- MongoDB Atlas for storing user accounts, video metadata, landmark metadata
+- AWS S3 (single bucket "motionframe-videoupload-bucket") for storing compressed videos, thumbnails, landmark exports
+- Multer (diskStorage) for temporary uploads
+- FFmpeg for compression, thumbnail extraction, and optional landmark-overlay video exports
+- MediaPipe (future) for skeletal landmark extraction
+- Socket.IO (optional) for real-time processing updates
+- Passport.js for local + OAuth authentication (Google, Facebook, GitHub, LinkedIn)
+
+## Frontend Stack:
+- React 18 with TypeScript
+- Vite build tooling
+- TailwindCSS for UI styling
+- Radix UI for components
+- Three.js with React Three Fiber for live 3D skeleton/rig visualization
+- Axios for API communication
+- Socket.IO client (optional) for real-time progress updates
+
+## Architecture Guidelines:
+- Stateless backend (no Redis, no GridFS, no persistent background queue yet)
+- Metadata (users, video tracking, pose analysis) stored in MongoDB
+- Heavy files (videos, thumbnails, exports) stored in AWS S3
+- Temporary file cleanup after uploads and exports
+- Error handling using global middleware
+- Real-time updates via Socket.IO OR fallback polling every few seconds
+
+## Important Standards:
+- Follow modern TypeScript best practices (strict typing, DTOs if needed)
+- Use modular service/controller structure (not monolithic functions)
+- Use async/await everywhere (no .then() chaining)
+- Secure sessions with cookie flags (`secure`, `httpOnly`, `sameSite`)
+- Use S3 signed URLs for file downloads (do not expose bucket public access)
+- Use environment variables for sensitive credentials
+- Separate Multer middleware, validation, and upload services
+- Validation of upload file types (only video mime types)
+
+## Important Changes Compared to Old Stack:
+- ❌ Remove Redis for caching
+- ❌ Remove MongoDB GridFS
+- ❌ Remove HLS streaming
+- ✅ Direct HTTP Range Requests for MP4 progressive playback
+- ✅ Dynamic on-demand exports (.mp4 overlay, .json, .csv, .bvh)
+- ✅ Dynamic avatar preview using Three.js (no pre-rendered videos)
+
