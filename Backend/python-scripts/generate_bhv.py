@@ -68,3 +68,45 @@ ROOT Hips
   }}
 }}
 """
+# Motion data block
+def write_motion(landmark_data, fps=30):
+    frame_time = 1 / fps
+    motion = f"MOTION\nFrames: {len(landmark_data)}\nFrame Time: {frame_time:.6f}\n"
+
+    for frame in landmark_data:
+        # We'll use only landmark 0 (hip) position to fill translation values
+        try:
+            hip = frame[0]
+            x = hip['x'] * 100
+            y = hip['y'] * 100
+            z = hip['z'] * 100
+        except (IndexError, KeyError):
+            x = y = z = 0
+
+        # Dummy rotations (0s)
+        motion += f"{x:.2f} {y:.2f} {z:.2f} " + "0 0 0 " * (len(JOINT_HIERARCHY) - 1) + "\n"
+    return motion
+
+# Load pose data JSON and convert to BVH
+def convert_to_bvh(json_path, output_path):
+    with open(json_path, "r") as f:
+        pose_data = json.load(f)
+
+    hierarchy = write_hierarchy()
+    motion = write_motion(pose_data)
+    
+    with open(output_path, "w") as f:
+        f.write(hierarchy)
+        f.write(motion)
+
+    print(f"BVH file saved to {output_path}")
+
+# CLI usage
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python generate_bvh.py input_pose.json output_file.bvh")
+        sys.exit(1)
+
+    json_input = sys.argv[1]
+    bvh_output = sys.argv[2]
+    convert_to_bvh(json_input, bvh_output)

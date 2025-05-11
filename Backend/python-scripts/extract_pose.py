@@ -5,7 +5,7 @@ import json
 import sys
 import os 
 
-def extract_pose(input_video_path, output_json_path):
+def extract_pose(input_video_path, output_json_path, output_video_path = None):
     mp_pose = mp.solutions.pose
     mp_drawing = mp.solutions.drawing_utils
 
@@ -14,6 +14,17 @@ def extract_pose(input_video_path, output_json_path):
     if not cap.isOpened():
         print(f"Error: Cannot open video file {input_video_path}")
         return
+
+    #setup Video writer if output_video_path is specified
+    writer  = None
+    if output_video_path:
+        fourcc =cv2.VideoWriter_fourcc(*'mp4v') #codec type
+        fps = cap.get(cv2.CAP_PROP_FPS) or 30
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        writer = cv2.VideoWriter(output_video_path, fourcc,fps,(width,height))
+
+
     
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_count = 0
@@ -34,8 +45,18 @@ def extract_pose(input_video_path, output_json_path):
             # Run pose detection
             results = pose.process(image)
 
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
             frame_landmarks = []
             if results.pose_landmarks:
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.pose_landmarks,
+                    mp_pose.POSE_CONNECTIONS
+                )
+
+                frame_landmarks = []
                 for idx, landmark in enumerate(results.pose_landmarks.landmark):
                     frame_landmarks.append({
                         "id": idx,
@@ -47,7 +68,14 @@ def extract_pose(input_video_path, output_json_path):
 
             landmarks_data.append(frame_landmarks)
 
+            else:
+                landmarks_data.append([])
+            if writer:
+                writer.write(image)
+
     cap.release()
+    if writer:
+        writer.realease()
 
     with open(output_json_path, "w") as f:
         json.dump(landmarks_data, f, indent=4)
