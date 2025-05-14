@@ -2,6 +2,11 @@ import mongoose, { Document, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import { normalizeEmail } from "../utils/validation.js";
 
+interface IUserPreferences {
+  theme: "dark" | "light";
+  language: "en" | "es" | "fr";
+}
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
   email: string;
@@ -20,6 +25,7 @@ export interface IUser extends Document {
   };
   role: "user" | "admin";
   isEmailVerified: boolean;
+  preferences: IUserPreferences;
   validatePassword(password: string): Promise<boolean>;
 }
 
@@ -40,6 +46,18 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   isEmailVerified: { type: Boolean, default: false },
+  preferences: {
+    theme: {
+      type: String,
+      enum: ["dark", "light"],
+      default: "dark",
+    },
+    language: {
+      type: String,
+      enum: ["en", "es", "fr"],
+      default: "en",
+    },
+  },
 });
 
 // Ensure Indexes Are Created (Remove Duplicates)

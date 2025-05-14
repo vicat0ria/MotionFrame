@@ -1,7 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
 import { AuthenticateOptions } from "passport-facebook";
-import { authLimiter } from "../middleware/ratelimit.middleware.js";
 import { validateRequest } from "../utils/validation.js";
 import { body } from "express-validator";
 import {
@@ -46,12 +45,18 @@ const loginValidation = [
 // Apply rate limiting only to local auth routes
 router.post(
   "/register",
-  authLimiter,
+  // authLimiter,
   registerValidation,
   validateRequest,
   register
 );
-router.post("/login", authLimiter, loginValidation, validateRequest, login);
+router.post(
+  "/login",
+  // authLimiter,
+  loginValidation,
+  validateRequest,
+  login
+);
 
 // Password management
 router.post(
@@ -93,9 +98,7 @@ router.get(
     const isNewUser = req.user?.isNew;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     res.redirect(
-      `${frontendUrl}/MotionFrame/#${
-        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
-      }`
+      `${frontendUrl}/MotionFrame/#${isNewUser ? "/?newUser=true" : "/"}`
     );
   }
 );
@@ -121,9 +124,7 @@ router.get(
     const isNewUser = req.user?.isNew;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     res.redirect(
-      `${frontendUrl}/MotionFrame/#${
-        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
-      }`
+      `${frontendUrl}/MotionFrame/#${isNewUser ? "/?newUser=true" : "/"}`
     );
   }
 );
@@ -149,9 +150,7 @@ router.get(
     const isNewUser = req.user?.isNew;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     res.redirect(
-      `${frontendUrl}/MotionFrame/#${
-        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
-      }`
+      `${frontendUrl}/MotionFrame/#${isNewUser ? "/?newUser=true" : "/"}`
     );
   }
 );
@@ -177,9 +176,7 @@ router.get(
     const isNewUser = req.user?.isNew;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     res.redirect(
-      `${frontendUrl}/MotionFrame/#${
-        isNewUser ? "/video-editor?newUser=true" : "/video-editor"
-      }`
+      `${frontendUrl}/MotionFrame/#${isNewUser ? "/?newUser=true" : "/"}`
     );
   }
 );

@@ -29,6 +29,8 @@ export const auth = {
 
   logout: async () => {
     const response = await api.post("/auth/logout");
+    // Only clear user ID, not projects
+    localStorage.removeItem("userId");
     return response.data;
   },
 

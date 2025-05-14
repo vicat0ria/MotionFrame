@@ -48,26 +48,28 @@ export class S3Service {
       let body: Buffer | Readable = originalBody;
       let contentLength: number | undefined;
 
+      logger.info(
+        `Starting S3 upload for key: ${key}, contentType: ${contentType}`
+      );
+
       /* Determine size */
       if (Buffer.isBuffer(body)) {
         contentLength = body.length;
+        logger.debug(`Using buffer with length: ${contentLength}`);
       } else {
         const maybePath = (body as Readable & { path?: string }).path;
         if (maybePath && fs.existsSync(maybePath)) {
           contentLength = fs.statSync(maybePath).size;
+          logger.debug(`Using file path: ${maybePath}, size: ${contentLength}`);
         } else {
-          // Fallback: read stream into buffer (thumbnail streams hit this path)
-          const chunks: Buffer[] = [];
-          for await (const chunk of body) chunks.push(chunk as Buffer);
-          body = Buffer.concat(chunks);
-          contentLength = (body as Buffer).length;
-          logger.debug(
-            `Converted stream to buffer for key=${key}  len=${contentLength}`
-          );
+          // For streams without a path, we'll use the stream directly
+          logger.debug(`Using direct stream for key: ${key}`);
         }
       }
 
-      logger.debug(`S3 upload → key=${key}  contentLength=${contentLength}`);
+      logger.info(
+        `S3 upload → key=${key} contentLength=${contentLength || "unknown"}`
+      );
 
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
@@ -78,10 +80,23 @@ export class S3Service {
       });
 
       await this.s3Client.send(command);
+      logger.info(`S3 upload completed successfully for key: ${key}`);
       return key;
     } catch (error) {
-      logger.error("Error uploading file to S3:", error);
-      throw new AppError("Failed to upload file", 500);
+      logger.error("Error uploading file to S3:", {
+        error,
+        key,
+        contentType,
+        errorName: error instanceof Error ? error.name : "Unknown",
+        errorMessage: error instanceof Error ? error.message : "Unknown error",
+        errorStack: error instanceof Error ? error.stack : undefined,
+      });
+      throw new AppError(
+        `Failed to upload file to S3: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+        500
+      );
     }
   }
 

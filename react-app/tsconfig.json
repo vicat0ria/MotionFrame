@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": ["@react-three/fiber", "three"],
 
     /* Linting */
     "strict": true,

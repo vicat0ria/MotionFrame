@@ -1,0 +1,31 @@
+/* Auth pages specific styles */
+.auth-page {
+  background-color: #2c223e !important;
+  min-height: 100vh;
+}
+
+.auth-container {
+  background-color: #20192d !important;
+}
+
+.auth-page,
+.auth-page * {
+  --background: #2c223e !important;
+  --foreground: #ffffff !important;
+  --card: #20192d !important;
+  --card-foreground: #ffffff !important;
+  --popover: #20192d !important;
+  --popover-foreground: #ffffff !important;
+  --primary: #9333ea !important;
+  --primary-foreground: #ffffff !important;
+  --secondary: rgba(0, 0, 0, 0.2) !important;
+  --secondary-foreground: #ffffff !important;
+  --muted: rgba(0, 0, 0, 0.2) !important;
+  --muted-foreground: rgba(255, 255, 255, 0.7) !important;
+  --accent: rgba(0, 0, 0, 0.2) !important;
+  --accent-foreground: #ffffff !important;
+  --destructive: #ef4444 !important;
+  --border: rgba(255, 255, 255, 0.1) !important;
+  --input: rgba(255, 255, 255, 0.1) !important;
+  --ring: #9333ea !important;
+}

@@ -4,11 +4,6 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 import { Video, VideoUrlResponse } from "@/types/video.d";
 
-interface UploadResponse {
-  message: string;
-  video: Video;
-}
-
 interface VideosResponse {
   videos: Video[];
 }
@@ -18,6 +13,27 @@ interface StatusResponse {
   progress: number;
   createdAt: string;
   updatedAt: string;
+}
+
+// Define types for the landmarks data
+export interface Landmark {
+  id: number;
+  x: number;
+  y: number;
+  z: number;
+  visibility: number;
+}
+
+export interface VideoMetadata {
+  original_width: number;
+  original_height: number;
+  frame_count: number;
+  fps: number;
+}
+
+export interface LandmarkResponse {
+  metadata?: VideoMetadata;
+  landmarks?: Landmark[][];
 }
 
 export const videoService = {
@@ -34,7 +50,7 @@ export const videoService = {
       const formData = new FormData();
       formData.append("video", file);
 
-      const response = await axios.post<UploadResponse>(
+      const response = await axios.post<{ videoId: string }>(
         `${API_URL}/videos/upload`,
         formData,
         {
@@ -46,11 +62,17 @@ export const videoService = {
       );
 
       console.log("Upload successful:", response.data);
-      const video = response.data.video;
-      const urlResponse = await this.getVideoUrl(video.id);
+      const videoId = response.data.videoId;
+      const urlResponse = await this.getVideoUrl(videoId);
+      const now = new Date();
       return {
-        ...video,
+        id: videoId,
+        videoId: videoId,
+        title: file.name,
         url: urlResponse.url,
+        duration: 0,
+        createdAt: now,
+        updatedAt: now,
       };
     } catch (error) {
       // Log error details safely without type checking
@@ -83,15 +105,20 @@ export const videoService = {
 
   // Get video URL for playback
   async getVideoUrl(videoId: string): Promise<VideoUrlResponse> {
-    const response = await axios.get<{ url: string }>(
-      `${API_URL}/videos/${videoId}/url`,
-      {
-        withCredentials: true,
-      }
-    );
-    return {
-      url: response.data.url,
-    };
+    try {
+      const response = await axios.get<{ url: string }>(
+        `${API_URL}/videos/${videoId}/url`,
+        {
+          withCredentials: true,
+        }
+      );
+      return {
+        url: response.data.url,
+      };
+    } catch (error) {
+      console.error("Error getting video URL:", error);
+      throw error;
+    }
   },
 
   // Get thumbnail URL
@@ -106,20 +133,61 @@ export const videoService = {
     });
   },
 
+  // Update video title
+  async updateVideoTitle(videoId: string, title: string): Promise<void> {
+    try {
+      await axios.patch(
+        `${API_URL}/videos/${videoId}/title`,
+        { title },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Error updating video title:", error);
+      throw error;
+    }
+  },
+
   // Get video processing status
   async getProcessingStatus(
     videoId: string
   ): Promise<{ status: string; progress: number }> {
-    const response = await axios.get<StatusResponse>(
-      `${API_URL}/videos/${videoId}/status`,
-      {
-        withCredentials: true,
-      }
-    );
+    try {
+      const response = await axios.get<StatusResponse>(
+        `${API_URL}/videos/${videoId}/status`,
+        {
+          withCredentials: true,
+        }
+      );
 
-    return {
-      status: response.data.status,
-      progress: response.data.progress,
-    };
+      return {
+        status: response.data.status,
+        progress: response.data.progress,
+      };
+    } catch (error) {
+      console.error("Error getting video status:", error);
+      // If we can't get the status, assume it's still processing
+      return {
+        status: "processing",
+        progress: 0,
+      };
+    }
+  },
+
+  // Get per-frame landmarks JSON
+  async getLandmarks(
+    videoId: string
+  ): Promise<LandmarkResponse | Landmark[][]> {
+    try {
+      const response = await axios.get<LandmarkResponse | Landmark[][]>(
+        `${API_URL}/videos/${videoId}/landmarks`,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching landmarks:", error);
+      throw error;
+    }
   },
 };

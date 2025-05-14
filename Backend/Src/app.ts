@@ -18,6 +18,10 @@ import { setupRoutes } from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import { setupSocketIO } from "./configs/socket.js";
 import http from "http";
+import {
+  VideoService,
+  VideoProcessingEvents,
+} from "./services/videoService.service.js";
 
 // Load environment variables
 config();
@@ -40,6 +44,11 @@ app.use(
     credentials: true,
   })
 );
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 // Connect to MongoDB
 await mongoose.connect(process.env.MONGO_URI || "");
@@ -107,6 +116,21 @@ const server = http.createServer(app);
 
 // Setup Socket.IO
 const io = setupSocketIO(server);
+
+// Broadcast video processing events to all connected clients
+const videoService = VideoService.getInstance();
+videoService["processingEvents"].on(
+  "progress",
+  (e: { analysisId: string; progress: number }) => {
+    io.emit("video:progress", { id: e.analysisId, progress: e.progress });
+  }
+);
+videoService["processingEvents"].on(
+  "error",
+  (e: { analysisId: string; error: string }) => {
+    io.emit("video:error", { id: e.analysisId, error: e.error });
+  }
+);
 
 // Graceful shutdown
 process.on("SIGTERM", () => {

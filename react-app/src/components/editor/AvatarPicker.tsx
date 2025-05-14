@@ -23,7 +23,7 @@ export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
         <Button
           variant="outline"
           size="icon"
-          className="w-12 h-12 rounded-full border-white/20 hover:bg-white/10 relative overflow-hidden p-0"
+          className="w-12 h-12 rounded-full border-white/20 hover:bg-card/10 relative overflow-hidden p-0"
         >
           <img 
             src={avatars[selected].image} 
@@ -40,7 +40,7 @@ export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
               variant="ghost"
               className={cn(
                 "flex items-center gap-2 justify-start",
-                selected === index && "bg-white/10"
+                selected === index && "bg-card/10"
               )}
               onClick={() => onSelect(index)}
             >

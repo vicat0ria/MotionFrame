@@ -8,6 +8,7 @@ export default defineConfig({
   base: "/MotionFrame/",
   plugins: [react(), envCompatible()],
   resolve: {
+    dedupe: ["three"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },

@@ -1,8 +1,18 @@
 export interface User {
-  _id: string;
+  id: string;
   email: string;
-  username: string;
-  token?: string;
-  createdAt: string;
-  updatedAt: string;
+  username?: string;
+  profile?: {
+    name?: string;
+    picture?: string;
+    provider?: string;
+  };
+  isEmailVerified: boolean;
+  authProvider: string;
+  hasPassword: boolean;
+}
+
+export interface UserPreferences {
+  theme: "dark" | "light";
+  language?: string;
 }

@@ -233,14 +233,23 @@ export const getCurrentUser = (req: Request, res: Response) => {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  const user = req.user;
+  const user = req.user as any;
 
+  // Determine authentication provider and password status
+  const authProvider =
+    user.oauthProviders && user.oauthProviders.length > 0
+      ? user.oauthProviders[0]
+      : "email";
+  // Assuming passwordHash or similar field indicates local password
+  const hasPassword = !!user.passwordHash;
   return res.status(200).json({
     id: user._id.toString(),
     email: user.email,
     username: user.username,
     profile: user.profile,
     isEmailVerified: user.isEmailVerified || false,
+    authProvider,
+    hasPassword,
   });
 };
 

@@ -188,3 +188,17 @@ tmp/
 temp/
 Thumbs.db
 .DS_Store
+
+# Uploads and temp data
+uploads/
+exports/
+
+# Motion/pose data
+*.pose.json
+*.landmarks.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

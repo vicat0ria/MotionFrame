@@ -5,30 +5,19 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { auth } from "@/services/auth";
-import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { authService } from "@/services/authService";
+import api from "@/services/api";
 import routes from "@/routes";
-
-interface User {
-  id: string;
-  email: string;
-  username?: string;
-  profile?: {
-    name?: string;
-    picture?: string;
-    provider?: string;
-  };
-  isEmailVerified: boolean;
-}
+import { User, UserPreferences } from "@/types/user";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => Promise<void>;
   isLoading: boolean;
-  getToken: () => Promise<string>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 // Create a context with undefined initial value
@@ -38,56 +27,50 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  * Auth Provider Component
  * Manages authentication state and provides auth methods to the application
  */
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { toast } = useToast();
 
   // Initialize authentication state
   useEffect(() => {
-    const initAuth = async () => {
+    const initializeAuth = async () => {
       try {
-        // Only try to get current user if not on login or signup pages
-        const path = location.pathname + location.hash;
-        const isAuthPage = path.includes("/login") || path.includes("/signup");
+        // First check if backend is available
+        const isBackendAvailable = await authService.checkBackendAvailability();
+        if (!isBackendAvailable) {
+          console.warn("Backend is not available during initialization");
+          setIsLoading(false);
+          return;
+        }
 
-        if (!isAuthPage) {
+        const userId = await authService.getCurrentUserId();
+        if (userId) {
           try {
-            const currentUser = (await auth.getCurrentUser()) as User;
-            setUser(currentUser);
-
-            // Check if this is a new user from OAuth
-            const params = new URLSearchParams(location.search);
-            if (params.get("newUser") === "true") {
-              toast({
-                title: "Welcome!",
-                description: "Your account has been created successfully.",
-              });
-              // Remove the newUser param from URL and redirect to video editor
-              navigate(routes.videoEditor, { replace: true });
+            // Get user data from backend using configured API instance
+            const response = await api.get<User>("/auth/current-user");
+            if (response.data) {
+              setUser(response.data);
             }
           } catch (error) {
-            // If authentication fails, clear user but don't redirect
-            setUser(null);
-            console.error("Authentication error:", error);
+            console.error("Error fetching user data:", error);
+            // Clear local data on error
+            localStorage.removeItem("userId");
+            localStorage.removeItem("exportedProjects");
           }
-        } else {
-          // If we're on auth pages, clear the user state
-          setUser(null);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
+        // Clear any stale data
+        localStorage.removeItem("userId");
+        localStorage.removeItem("exportedProjects");
       } finally {
         setIsLoading(false);
       }
     };
 
-    initAuth();
-  }, [location, navigate, toast]);
+    initializeAuth();
+  }, []);
 
   /**
    * Login method
@@ -96,13 +79,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     async (email: string, password: string) => {
       try {
         setIsLoading(true);
-        const response = (await auth.login(email, password)) as { user: User };
-        setUser(response.user);
-        navigate(routes.videoEditor);
-        toast({
-          title: "Welcome back!",
-          description: "You've successfully logged in.",
-        });
+        await authService.login(email, password);
+        const userId = await authService.getCurrentUserId();
+
+        if (userId) {
+          try {
+            // Get user data from backend using configured API instance
+            const response = await api.get<User>("/auth/current-user");
+            if (response.data) {
+              setUser(response.data);
+
+              // Load user's theme preferences
+              try {
+                const prefsResponse = await api.get<UserPreferences>(
+                  `/users/${userId}/preferences`
+                );
+                if (prefsResponse.data?.theme) {
+                  const userTheme = prefsResponse.data.theme;
+                  localStorage.setItem(`theme_${userId}`, userTheme);
+                  // Trigger storage event for theme provider
+                  window.dispatchEvent(new Event("storage"));
+                }
+              } catch (error) {
+                console.error("Error loading user theme preferences:", error);
+              }
+
+              navigate(routes.home);
+            }
+          } catch (error) {
+            console.error("Error fetching user data after login:", error);
+            throw error;
+          }
+        }
       } catch (error) {
         console.error("Login error:", error);
         throw error;
@@ -110,27 +118,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsLoading(false);
       }
     },
-    [navigate, toast]
+    [navigate]
   );
 
   /**
    * Signup method
    */
   const signup = useCallback(
-    async (email: string, password: string, name: string) => {
+    async (email: string, password: string) => {
       try {
         setIsLoading(true);
-        await auth.signup({ email, password, name });
-
-        // Auto login after signup
-        const response = (await auth.login(email, password)) as { user: User };
-        setUser(response.user);
-        navigate(routes.videoEditor);
-
-        toast({
-          title: "Success",
-          description: "Account created successfully! Welcome to MotionFrame.",
-        });
+        await authService.signup(email, password);
+        await login(email, password);
       } catch (error) {
         console.error("Signup error:", error);
         throw error;
@@ -138,7 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsLoading(false);
       }
     },
-    [navigate, toast]
+    [login]
   );
 
   /**
@@ -147,45 +146,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
-      await auth.logout();
+      await authService.logout();
       setUser(null);
-      navigate(routes.login);
 
-      toast({
-        title: "Logged out",
-        description: "You've been successfully logged out.",
-      });
+      // Reset theme to default dark theme
+      const root = window.document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add("dark");
+
+      navigate(routes.login);
     } catch (error) {
       console.error("Logout error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to log out. Please try again.",
-      });
+      throw error;
     } finally {
       setIsLoading(false);
     }
-  }, [navigate, toast]);
+  }, [navigate]);
+
+  const updateUser = (userData: Partial<User>) => {
+    setUser((prev) => (prev ? { ...prev, ...userData } : null));
+  };
 
   // Context value
   const value = {
     user,
+    isLoading,
     login,
     signup,
     logout,
-    isLoading,
-    getToken: async () => {
-      const response = (await auth.refreshToken()) as { token: string };
-      return response.token;
-    },
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 /**
  * Auth hook for convenient access to auth context
  */
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
 
   if (context === undefined) {
@@ -193,4 +191,4 @@ export const useAuth = () => {
   }
 
   return context;
-};
+}

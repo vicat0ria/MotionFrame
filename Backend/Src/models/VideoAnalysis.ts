@@ -3,10 +3,24 @@ import type { IVideoAnalysis } from "../types/index.js";
 
 const videoAnalysisSchema = new mongoose.Schema(
   {
+    videoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "VideoAnalysis",
+      required: true,
+    },
+    compressedVideoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "VideoAnalysis",
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    error: {
+      message: { type: String },
+      code: { type: String },
+      timestamp: { type: Date },
     },
     originalName: {
       type: String,
@@ -32,6 +46,13 @@ const videoAnalysisSchema = new mongoose.Schema(
     s3LandmarksKey: {
       type: String,
     },
+    s3LandmarksJsonKey: {
+      type: String,
+    },
+    videoHash: {
+      type: String,
+      index: true,
+    },
     size: {
       type: Number,
       required: true,
@@ -49,6 +70,7 @@ const videoAnalysisSchema = new mongoose.Schema(
 
 videoAnalysisSchema.index({ userId: 1 });
 videoAnalysisSchema.index({ createdAt: 1 });
+videoAnalysisSchema.index({ videoHash: 1 });
 
 const VideoAnalysis = mongoose.model<IVideoAnalysis>(
   "VideoAnalysis",

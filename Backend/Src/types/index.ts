@@ -77,6 +77,8 @@ export interface IVideoAnalysis extends Document {
   s3VideoKey: string;
   s3ThumbnailKey: string;
   s3LandmarksKey?: string;
+  s3LandmarksJsonKey?: string;
+  videoHash?: string;
   results?: {
     poseData?: any[];
     motionData?: any[];
@@ -108,6 +110,7 @@ declare global {
   namespace Express {
     interface User extends IUser {}
     interface Request {
+      user?: User;
       // For video streaming middleware
       videoInfo?: {
         fileId: string;
@@ -148,6 +151,8 @@ export interface VideoAnalysis {
   s3VideoKey: string;
   s3ThumbnailKey: string;
   s3LandmarksKey?: string;
+  s3LandmarksJsonKey?: string;
+  videoHash?: string;
   size: number;
   duration?: number;
   resolution?: {

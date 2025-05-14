@@ -6,6 +6,8 @@ import {
   updateUserProfile,
   deleteUser,
   getAllUsers,
+  getUserPreferences,
+  updateUserPreferences,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -20,5 +22,9 @@ router.delete("/profile", isAuthenticated, deleteUser);
 
 // Admin only routes
 router.get("/all", isAuthenticated, isAdmin, getAllUsers);
+
+// Preferences routes
+router.get("/:userId/preferences", isAuthenticated, getUserPreferences);
+router.put("/:userId/preferences", isAuthenticated, updateUserPreferences);
 
 export default router;

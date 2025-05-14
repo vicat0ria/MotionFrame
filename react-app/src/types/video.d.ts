@@ -2,11 +2,11 @@
 
 export interface Video {
   id: string;
-  videoId: string;
+  videoId?: string;
   compressedVideoId?: string;
   url: string;
   title?: string;
-  duration: number;
+  duration?: number;
   thumbnailUrl?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -32,6 +32,11 @@ export interface EditorSettings {
   selectedAvatar: number;
 }
 
+export interface VideoEditorLocationState {
+  project?: Project;
+  settings?: EditorSettings;
+}
+
 export interface VideoPreviewSectionProps {
   videoState: VideoState;
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -55,4 +60,33 @@ export interface PlaybackControlsProps {
   skipForward: () => void;
   selectedAvatar: number;
   updateSelectedAvatar: (index: number) => void;
+}
+
+export interface Project {
+  _id?: string;
+  id?: string;
+  title: string;
+  description: string;
+  videoId: string;
+  exportType: string;
+  fileType: string;
+  timestamp: string;
+  badge: string;
+  videoTitle: string;
+  userId: string;
+  status?: "pending" | "processing" | "completed" | "failed";
+  s3ExportKey?: string;
+  settings?: {
+    playbackSpeed: number;
+    smoothness: number;
+    selectedAvatar?: number;
+  };
+}
+
+export interface Template {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  badge: string;
 }

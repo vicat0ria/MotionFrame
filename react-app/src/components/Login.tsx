@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import skeletonVideoUrl from "@/assets/skeleton-dancing.mp4?url";
 import routes from "@/routes";
 import { auth } from "@/services/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import "@/styles/auth.css";
 
 interface ApiError {
   response?: {
@@ -30,6 +31,13 @@ const Login = () => {
     authMethods?: string[];
   } | null>(null);
   const [generalError, setGeneralError] = useState<string | null>(null);
+
+  // Ensure dark theme is applied
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light");
+    root.classList.add("dark");
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,15 +103,12 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#2c223e" }}
-    >
+    <div className="auth-page min-h-screen flex flex-col">
       <div className="flex-1 flex flex-col items-center px-4">
         {/* Header */}
         <div className="w-full max-w-7xl mt-8 mb-6">
           <div className="flex items-center justify-center gap-4">
-            <div className="bg-white/5 pl-3 pr-1 py-3 rounded-xl backdrop-blur-sm">
+            <div className="bg-black/5 pl-3 pr-1 py-3 rounded-xl backdrop-blur-sm">
               <img
                 src={logo}
                 alt="MotionFrame Logo"
@@ -119,10 +124,7 @@ const Login = () => {
         {/* Main Container Wrapper */}
         <div className="flex-1 flex items-center py-4">
           {/* Main Container */}
-          <div
-            className="w-full max-w-7xl"
-            style={{ backgroundColor: "#20192d", borderRadius: "0.5rem" }}
-          >
+          <div className="w-full max-w-7xl auth-container rounded-lg">
             <div className="flex flex-col lg:flex-row py-8">
               {/* Left Column - Video Animation */}
               <div className="lg:w-1/2 flex items-center justify-center px-4 lg:pl-8 lg:pr-4 mb-6 lg:mb-0">
@@ -151,14 +153,14 @@ const Login = () => {
               <div className="relative lg:w-1/2 px-4 lg:pr-8 lg:pl-4 flex flex-col justify-center">
                 <div className="w-full max-w-md mx-auto space-y-4">
                   <div className="space-y-1">
-                    <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+                    <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight text-white">
                       Sign in to your account
                     </h1>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-400">
                       Don't have an account?{" "}
                       <Link
                         to={routes.signup}
-                        className="text-primary hover:text-primary/90 hover:underline"
+                        className="text-purple-400 hover:text-purple-300 hover:underline"
                       >
                         Create an account
                       </Link>
@@ -181,7 +183,7 @@ const Login = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("google")}
                                   >
                                     Google
@@ -191,7 +193,7 @@ const Login = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("github")}
                                   >
                                     GitHub
@@ -201,7 +203,7 @@ const Login = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("facebook")}
                                   >
                                     Facebook
@@ -211,7 +213,7 @@ const Login = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("linkedin")}
                                   >
                                     LinkedIn
@@ -243,7 +245,7 @@ const Login = () => {
                         placeholder="Email"
                         onChange={handleInputChange}
                         value={formData.email}
-                        className="bg-background"
+                        className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                         required
                         autoComplete="new-password"
                       />
@@ -256,7 +258,7 @@ const Login = () => {
                         placeholder="Password"
                         onChange={handleInputChange}
                         value={formData.password}
-                        className="bg-background"
+                        className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                         required
                         autoComplete="new-password"
                       />
@@ -264,7 +266,7 @@ const Login = () => {
 
                     <Button
                       type="submit"
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                       disabled={isLoading}
                     >
                       {isLoading ? "Signing in..." : "Sign in"}
@@ -273,10 +275,10 @@ const Login = () => {
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
+                      <span className="w-full border-t border-gray-700" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-[#20192d] px-2 text-muted-foreground">
+                      <span className="bg-[#20192d] px-2 text-gray-400">
                         Or continue with
                       </span>
                     </div>
@@ -286,7 +288,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full bg-background hover:bg-accent"
+                      className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                       disabled={isLoading}
                       onClick={() => handleOAuthLogin("google")}
                     >
@@ -301,7 +303,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full bg-background hover:bg-accent"
+                      className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                       disabled={isLoading}
                       onClick={() => handleOAuthLogin("github")}
                     >
@@ -318,7 +320,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full bg-background hover:bg-accent"
+                      className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                       disabled={isLoading}
                       onClick={() => handleOAuthLogin("facebook")}
                     >
@@ -333,7 +335,7 @@ const Login = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full bg-background hover:bg-accent"
+                      className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                       disabled={isLoading}
                       onClick={() => handleOAuthLogin("linkedin")}
                     >

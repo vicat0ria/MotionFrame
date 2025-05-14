@@ -182,3 +182,66 @@ export const getAllUsers = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching users" });
   }
 };
+
+export const getUserPreferences = async (req: Request, res: Response) => {
+  try {
+    ensureUserAuthenticated(req);
+    const { userId } = req.params;
+
+    // Verify the requesting user is accessing their own preferences
+    if (req.user._id.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to access these preferences" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return user preferences, defaulting to dark theme and English if not set
+    const preferences = {
+      theme: user.preferences?.theme || "dark",
+      language: user.preferences?.language || "en",
+    };
+
+    res.json(preferences);
+  } catch (error) {
+    logger.error("Error getting user preferences:", error);
+    res.status(500).json({ message: "Error retrieving preferences" });
+  }
+};
+
+export const updateUserPreferences = async (req: Request, res: Response) => {
+  try {
+    ensureUserAuthenticated(req);
+    const { userId } = req.params;
+    const { theme, language } = req.body;
+
+    // Verify the requesting user is updating their own preferences
+    if (req.user._id.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to update these preferences" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user preferences
+    user.preferences = {
+      theme: theme || user.preferences?.theme || "dark",
+      language: language || user.preferences?.language || "en",
+    };
+
+    await user.save();
+
+    res.json(user.preferences);
+  } catch (error) {
+    logger.error("Error updating user preferences:", error);
+    res.status(500).json({ message: "Error updating preferences" });
+  }
+};

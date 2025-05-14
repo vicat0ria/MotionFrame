@@ -180,6 +180,41 @@ export class VideoController {
       next(err);
     }
   };
+
+  public updateVideoTitle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.user) throw new AppError("User not authenticated", 401);
+      const { id } = req.params;
+      const { title } = req.body;
+
+      if (!title) {
+        throw new AppError("Title is required", 400);
+      }
+
+      const analysis = await VideoAnalysis.findOne({
+        $or: [
+          { _id: id, userId: req.user._id },
+          { videoId: id, userId: req.user._id },
+          { compressedVideoId: id, userId: req.user._id },
+        ],
+      });
+
+      if (!analysis) {
+        throw new AppError("Video not found", 404);
+      }
+
+      analysis.originalName = title;
+      await analysis.save();
+
+      res.json({ success: true, title });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 // helper functions

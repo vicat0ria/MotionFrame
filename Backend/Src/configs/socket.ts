@@ -4,7 +4,10 @@ import { Server as HttpServer } from "http";
 export function setupSocketIO(server: HttpServer) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || "http://localhost:3000",
+      origin: [
+        process.env.CLIENT_URL || "http://localhost:3000",
+        process.env.CLIENT_URL_ALT || "http://localhost:5173",
+      ],
       credentials: true,
     },
   });

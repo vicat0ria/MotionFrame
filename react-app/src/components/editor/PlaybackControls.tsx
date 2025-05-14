@@ -26,7 +26,10 @@ export function PlaybackControls({
   const { video, error, isPlaying } = videoState;
 
   return (
-    <div className="px-4" style={{ backgroundColor: "#2c223e" }}>
+    <div
+      className="px-4 video-controls-container"
+      style={{ backgroundColor: "#2c223e" }}
+    >
       <div className="flex items-center justify-between max-w-full px-4 py-4">
         <div className="w-12" />
 
@@ -34,7 +37,7 @@ export function PlaybackControls({
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full text-white border-white/20 hover:bg-white/10"
+            className="video-control-button rounded-full text-foreground border-white/20 hover:bg-card/10"
             onClick={skipBackward}
             disabled={!video || !!error}
           >
@@ -55,7 +58,7 @@ export function PlaybackControls({
           <Button
             variant="outline"
             size="icon"
-            className="w-16 h-16 rounded-full text-white border-white/20 hover:bg-white/10"
+            className="play-pause-button w-16 h-16 rounded-full text-foreground border-white/20 hover:bg-card/10"
             onClick={togglePlayPause}
             disabled={!video || !!error}
           >
@@ -98,7 +101,7 @@ export function PlaybackControls({
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full text-white border-white/20 hover:bg-white/10"
+            className="video-control-button rounded-full text-foreground border-white/20 hover:bg-card/10"
             onClick={skipForward}
             disabled={!video || !!error}
           >

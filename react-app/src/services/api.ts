@@ -1,9 +1,11 @@
 import axios from "axios";
 
+// Get API URL from environment variable or use default
 export const API_BASE_URL =
-  process.env.VITE_API_URL || "http://localhost:5000/api";
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 export const FRONTEND_BASE_URL = "http://localhost:5173/MotionFrame/#";
 
+// Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
@@ -12,38 +14,40 @@ const api = axios.create({
   },
 });
 
-// Add CSRF token to requests
-api.interceptors.request.use((config) => {
-  const csrfToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrfToken="))
-    ?.split("=")[1];
+// Add request interceptor for error handling
+api.interceptors.request.use(
+  (config) => {
+    // Add CSRF token if available
+    const csrfToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrfToken="))
+      ?.split("=")[1];
 
-  if (csrfToken && config.headers) {
-    config.headers["X-CSRF-Token"] = csrfToken;
+    if (csrfToken && config.headers) {
+      config.headers["X-CSRF-Token"] = csrfToken;
+    }
+    return config;
+  },
+  (error) => {
+    console.error("Request error:", error);
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-// Handle response errors
+// Add response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Only redirect on 401 if it's not a auth-related endpoint
-    if (error.response?.status === 401) {
-      // Get the current path from window.location
-      const currentPath = window.location.pathname + window.location.hash;
-
-      // Don't redirect if already on login or signup pages
-      if (
-        !currentPath.includes("/login") &&
-        !currentPath.includes("/signup") &&
-        !error.config.url.includes("/auth/current-user")
-      ) {
-        console.log("Unauthorized access, redirecting to login page");
-        // Handle unauthorized access with exact URL
-        window.location.href = `${FRONTEND_BASE_URL}/login`;
-      }
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Response error:", error.response.data);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("No response received:", error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Request setup error:", error.message);
     }
     return Promise.reject(error);
   }

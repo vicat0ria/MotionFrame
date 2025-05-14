@@ -11,6 +11,7 @@ import routes from "@/routes";
 import { auth } from "@/services/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
 import { Label } from "@/components/ui/label";
+import "@/styles/auth.css";
 
 interface ApiError {
   response?: {
@@ -214,15 +215,12 @@ const SignUp = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#2c223e" }}
-    >
+    <div className="auth-page min-h-screen flex flex-col">
       <div className="flex-1 flex flex-col items-center px-4">
         {/* Header */}
         <div className="w-full max-w-7xl mt-8 mb-6">
           <div className="flex items-center justify-center gap-4">
-            <div className="bg-white/5 pl-3 pr-1 py-3 rounded-xl backdrop-blur-sm">
+            <div className="bg-black/5 pl-3 pr-1 py-3 rounded-xl backdrop-blur-sm">
               <img
                 src={logo}
                 alt="MotionFrame Logo"
@@ -238,10 +236,7 @@ const SignUp = () => {
         {/* Main Container Wrapper */}
         <div className="flex-1 flex items-center py-4">
           {/* Main Container */}
-          <div
-            className="w-full max-w-7xl"
-            style={{ backgroundColor: "#20192d", borderRadius: "0.5rem" }}
-          >
+          <div className="w-full max-w-7xl auth-container rounded-lg">
             <div className="flex flex-col lg:flex-row py-8">
               {/* Left Column - Video Animation */}
               <div className="lg:w-1/2 flex items-center justify-center px-4 lg:pl-8 lg:pr-4 mb-6 lg:mb-0">
@@ -284,14 +279,14 @@ const SignUp = () => {
               <div className="relative lg:w-1/2 px-4 lg:pr-8 lg:pl-4 flex flex-col justify-center">
                 <div className="w-full max-w-md mx-auto space-y-4">
                   <div className="space-y-1">
-                    <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+                    <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight text-white">
                       Create an account
                     </h1>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-400">
                       Already have an account?{" "}
                       <Link
                         to={routes.login}
-                        className="text-primary hover:text-primary/90 hover:underline"
+                        className="text-purple-400 hover:text-purple-300 hover:underline"
                       >
                         Log in
                       </Link>
@@ -314,7 +309,7 @@ const SignUp = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("google")}
                                   >
                                     Google
@@ -324,7 +319,7 @@ const SignUp = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("github")}
                                   >
                                     GitHub
@@ -334,7 +329,7 @@ const SignUp = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("facebook")}
                                   >
                                     Facebook
@@ -344,7 +339,7 @@ const SignUp = () => {
                                   <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-background hover:bg-accent"
+                                    className="bg-black/20 hover:bg-black/30 text-white border-gray-700"
                                     onClick={() => handleOAuthLogin("linkedin")}
                                   >
                                     LinkedIn
@@ -371,45 +366,53 @@ const SignUp = () => {
                   >
                     <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="firstName">First name</Label>
+                        <Label htmlFor="firstName" className="text-white">
+                          First name
+                        </Label>
                         <Input
                           id="firstName"
                           name="firstName"
                           placeholder="First name"
                           onChange={handleChange}
                           value={formData.firstName}
-                          className="bg-background"
+                          className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                           autoComplete="new-password"
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="lastName">Last name</Label>
+                        <Label htmlFor="lastName" className="text-white">
+                          Last name
+                        </Label>
                         <Input
                           id="lastName"
                           name="lastName"
                           placeholder="Last name"
                           onChange={handleChange}
                           value={formData.lastName}
-                          className="bg-background"
+                          className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                           autoComplete="new-password"
                         />
                       </div>
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email" className="text-white">
+                        Email
+                      </Label>
                       <Input
                         id="email"
                         name="email"
                         placeholder="Email"
                         onChange={handleChange}
                         value={formData.email}
-                        className="bg-background"
+                        className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                         autoComplete="new-password"
                       />
                     </div>
                     <div className="grid gap-2">
                       <div className="flex justify-between">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password" className="text-white">
+                          Password
+                        </Label>
                       </div>
                       <Input
                         id="password"
@@ -418,21 +421,21 @@ const SignUp = () => {
                         placeholder="Password"
                         onChange={handleChange}
                         value={formData.password}
-                        className="bg-background"
+                        className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                         autoComplete="new-password"
                       />
                       {/* Show password requirements only when needed */}
                       {showPasswordRequirements && (
-                        <div className="p-3 bg-muted/50 rounded-lg mt-2">
-                          <h3 className="font-medium mb-2 text-sm">
+                        <div className="p-3 bg-black/20 rounded-lg mt-2">
+                          <h3 className="font-medium mb-2 text-sm text-white">
                             Password Requirements
                           </h3>
-                          <ul className="text-xs text-muted-foreground space-y-1">
+                          <ul className="text-xs text-gray-400 space-y-1">
                             <li
                               className={
                                 passwordStrength.hasMinLength
                                   ? "text-green-500"
-                                  : "text-destructive"
+                                  : "text-red-500"
                               }
                             >
                               {passwordStrength.hasMinLength ? "✓" : "✗"} At
@@ -442,7 +445,7 @@ const SignUp = () => {
                               className={
                                 passwordStrength.hasUpperCase
                                   ? "text-green-500"
-                                  : "text-destructive"
+                                  : "text-red-500"
                               }
                             >
                               {passwordStrength.hasUpperCase ? "✓" : "✗"} At
@@ -452,7 +455,7 @@ const SignUp = () => {
                               className={
                                 passwordStrength.hasLowerCase
                                   ? "text-green-500"
-                                  : "text-destructive"
+                                  : "text-red-500"
                               }
                             >
                               {passwordStrength.hasLowerCase ? "✓" : "✗"} At
@@ -462,7 +465,7 @@ const SignUp = () => {
                               className={
                                 passwordStrength.hasNumber
                                   ? "text-green-500"
-                                  : "text-destructive"
+                                  : "text-red-500"
                               }
                             >
                               {passwordStrength.hasNumber ? "✓" : "✗"} At least
@@ -473,7 +476,9 @@ const SignUp = () => {
                       )}
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <Label htmlFor="confirmPassword" className="text-white">
+                        Confirm Password
+                      </Label>
                       <Input
                         id="confirmPassword"
                         name="confirmPassword"
@@ -481,7 +486,7 @@ const SignUp = () => {
                         placeholder="Confirm password"
                         onChange={handleChange}
                         value={formData.confirmPassword}
-                        className="bg-background"
+                        className="bg-black/20 border-gray-700 text-white placeholder:text-gray-500"
                         autoComplete="new-password"
                       />
                     </div>
@@ -491,15 +496,13 @@ const SignUp = () => {
                         id="terms"
                         onCheckedChange={handleCheckboxChange}
                         checked={formData.agreeToTerms}
+                        className="border-gray-700"
                       />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm text-muted-foreground"
-                      >
+                      <label htmlFor="terms" className="text-sm text-gray-400">
                         I agree to the{" "}
                         <Link
                           to="/terms"
-                          className="text-primary hover:text-primary/90 hover:underline"
+                          className="text-purple-400 hover:text-purple-300 hover:underline"
                         >
                           Terms & Conditions
                         </Link>
@@ -508,7 +511,7 @@ const SignUp = () => {
 
                     <Button
                       type="submit"
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                       disabled={isLoading}
                     >
                       {isLoading ? "Creating account..." : "Create account"}
@@ -516,10 +519,10 @@ const SignUp = () => {
 
                     <div className="relative">
                       <div className="absolute inset-0 flex items-center">
-                        <Separator className="w-full" />
+                        <Separator className="w-full border-gray-700" />
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-[#20192d] px-2 text-muted-foreground">
+                        <span className="bg-[#20192d] px-2 text-gray-400">
                           Or register with
                         </span>
                       </div>
@@ -529,7 +532,7 @@ const SignUp = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full bg-background hover:bg-accent"
+                        className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                         disabled={isLoading}
                         onClick={() => handleOAuthLogin("google")}
                       >
@@ -544,7 +547,7 @@ const SignUp = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full bg-background hover:bg-accent"
+                        className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                         disabled={isLoading}
                         onClick={() => handleOAuthLogin("github")}
                       >
@@ -561,7 +564,7 @@ const SignUp = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full bg-background hover:bg-accent"
+                        className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                         disabled={isLoading}
                         onClick={() => handleOAuthLogin("facebook")}
                       >
@@ -576,7 +579,7 @@ const SignUp = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full bg-background hover:bg-accent"
+                        className="w-full bg-black/20 hover:bg-black/30 text-white border-gray-700"
                         disabled={isLoading}
                         onClick={() => handleOAuthLogin("linkedin")}
                       >
