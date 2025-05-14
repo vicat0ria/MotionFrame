@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "target": "es2017",
+    "module": "NodeNext",
+    "moduleResolution": "Node16",
+    "rootDir": "./Src",
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["Src/**/*.ts", "Src/types/**/*.d.ts", "Src/configs/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
