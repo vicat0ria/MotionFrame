@@ -1,0 +1,409 @@
+/* Light theme overrides */
+html.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Home Page */
+html.light .page {
+  background-color: #ffffff;
+}
+
+html.light .sidebar {
+  background-color: #e2e4e8 !important;
+  border-color: #e5e7eb;
+}
+
+html.light .card {
+  background-color: #e2e4e8 !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html.light .card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+html.light .card-title {
+  color: #111827 !important;
+}
+
+html.light .card-description {
+  color: #4b5563 !important;
+}
+
+html.light .page-title,
+html.light .section-title {
+  color: #111827 !important;
+}
+
+html.light .button-icon {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+html.light .button-icon:hover {
+  background-color: #f3f4f6 !important;
+}
+
+html.light .logo {
+  filter: none !important;
+  opacity: 0.9;
+}
+
+html.light .logo-text {
+  color: #111827 !important;
+  opacity: 0.9;
+}
+
+/* Video Editor */
+html.light .editor-page {
+  background-color: #ffffff !important;
+}
+
+html.light .editor-sidebar {
+  background-color: #e2e4e8 !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .editor-sidebar .text-foreground {
+  color: #111827 !important;
+}
+
+html.light .editor-sidebar .text-foreground\/60 {
+  color: #4b5563 !important;
+}
+
+html.light .editor-sidebar .bg-\[\#3a3a3a\] {
+  background-color: #e2e4e8 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html.light .editor-sidebar .bg-\[\#3a3a3a\]:hover {
+  background-color: #f4f4f6 !important;
+}
+
+html.light .editor-sidebar .bg-\[\#2a2a2a\] {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .editor-sidebar .ring-purple-500 {
+  --tw-ring-color: #4338ca !important;
+}
+
+html.light .editor-sidebar .hover\:bg-\[\#4a4a4a\]:hover {
+  background-color: #f4f4f6 !important;
+}
+
+html.light .editor-sidebar .hover\:text-gray-300:hover {
+  color: #4b5563 !important;
+}
+
+html.light .editor-header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #ffffff;
+}
+
+html.light .editor-title {
+  color: #111827 !important;
+}
+
+html.light .editor-preview {
+  background-color: #ffffff !important;
+}
+
+/* Video window styles */
+html.light .editor-preview .relative {
+  background-color: #f4f4f6 !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .editor-preview .absolute {
+  background-color: rgba(226, 228, 232, 0.5) !important;
+  color: #111827 !important;
+}
+
+html.light .editor-preview .absolute:hover {
+  background-color: rgba(226, 228, 232, 0.7) !important;
+}
+
+/* Editor Settings */
+html.light .editor-settings {
+  background-color: #ebedf1 !important;
+}
+
+html.light .editor-settings .border-t {
+  border-color: #e5e7eb !important;
+}
+
+html.light .editor-settings .text-foreground {
+  color: #111827 !important;
+}
+
+html.light .settings-card {
+  background-color: #f8f9fa !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light .settings-divider {
+  background-color: #e5e7eb !important;
+}
+
+/* Settings Controls */
+html.light .settings-control-button {
+  background-color: #f4f4f6 !important;
+  border-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+html.light .settings-control-button:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .settings-value {
+  color: #111827 !important;
+}
+
+/* Slider Styles */
+html.light .settings-slider [data-orientation="horizontal"] {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .settings-slider [role="slider"] {
+  background-color: #ffffff !important;
+  border-color: #4338ca !important;
+}
+
+html.light .settings-slider [data-orientation="horizontal"].bg-purple-500 {
+  background-color: #4338ca !important;
+}
+
+/* Speed/Smoothness Buttons */
+html.light .speed-button,
+html.light .smoothness-button {
+  background-color: #f4f4f6 !important;
+  border-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+html.light .speed-button:hover,
+html.light .smoothness-button:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .speed-button.active,
+html.light .smoothness-button.active {
+  background-color: #4338ca !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Slider Track Background */
+html.light .settings-slider .bg-gray-700 {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .settings-slider .bg-purple-500 {
+  background-color: #4338ca !important;
+}
+
+/* Video Preview Component */
+html.light .video-preview-container {
+  background-color: #f4f4f6 !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .video-preview-header {
+  background-color: #e2e4e8 !important;
+  color: #111827 !important;
+}
+
+html.light .video-container {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .fullscreen-button {
+  background-color: rgba(226, 228, 232, 0.5) !important;
+  color: #111827 !important;
+}
+
+html.light .fullscreen-button:hover {
+  background-color: rgba(226, 228, 232, 0.7) !important;
+}
+
+/* Editor Preview Section */
+html.light .editor-preview {
+  background-color: #ffffff !important;
+}
+
+html.light .editor-preview .flex-1.flex.flex-col.rounded-lg {
+  background-color: #f4f4f6 !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .editor-preview .flex.justify-between.items-center {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .editor-preview .text-base.font-medium {
+  color: #111827 !important;
+}
+
+html.light .editor-preview .relative.mx-auto.rounded-lg {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .editor-preview .bg-background\/50 {
+  background-color: rgba(226, 228, 232, 0.5) !important;
+  color: #111827 !important;
+}
+
+html.light .editor-preview .bg-background\/50:hover {
+  background-color: rgba(226, 228, 232, 0.7) !important;
+}
+
+/* Timeline Slider */
+html.light .timeline-container {
+  background-color: #ffffff !important;
+}
+
+html.light .timeline-container .text-foreground\/60 {
+  color: #4b5563 !important;
+}
+
+html.light .timeline-slider {
+  background-color: #ebedf1 !important;
+}
+
+html.light .timeline-slider [role="slider"] {
+  background-color: #4338ca !important;
+  border-color: #4338ca !important;
+}
+
+html.light .timeline-slider [data-orientation="horizontal"] {
+  background-color: #4338ca !important;
+}
+
+/* Video Controls */
+html.light .video-controls-container {
+  background-color: #ffffff !important;
+}
+
+html.light .video-control-button {
+  background-color: #ebedf1 !important;
+  border: none !important;
+  color: #4338ca !important;
+}
+
+html.light .video-control-button:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .play-pause-button {
+  background-color: #ebedf1 !important;
+  border: none !important;
+  color: #4338ca !important;
+}
+
+html.light .play-pause-button:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .avatar-button {
+  border: none !important;
+  background-color: #ebedf1 !important;
+  color: #4338ca !important;
+}
+
+html.light .avatar-button:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .button-export {
+  color: #ffffff !important;
+}
+
+html.light .card .relative {
+  background-color: pink !important;
+}
+
+/* Export Page */
+html.light .export-page {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+html.light .page-title {
+  color: #111827 !important;
+}
+
+html.light .form-label {
+  color: #111827 !important;
+}
+
+html.light .form-input {
+  background-color: #e2e4e8 !important;
+  color: #111827 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html.light .form-card {
+  background-color: #e2e4e8 !important;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .form-select {
+  background-color: #f8f9fa !important;
+  color: #111827 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html.light .form-select option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+html.light .button-export {
+  background-color: #4338ca !important;
+  color: #ffffff !important;
+}
+
+html.light .button-export:hover {
+  background-color: #3730a3 !important;
+}
+
+html.light .button-back {
+  background-color: #ebedf1 !important;
+  color: #4338ca !important;
+}
+
+html.light .button-back:hover {
+  background-color: #e2e4e8 !important;
+}
+
+html.light .preview-title {
+  color: #111827 !important;
+}
+
+html.light .preview-image {
+  border: 3px solid #000000 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Preview Images - Both Themes */
+.preview-image {
+  border: 3px solid #000000 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Light Theme Preview Image Override */
+html.light .preview-image {
+  background-color: #f8f9fa !important;
+}
